@@ -1,0 +1,52 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+url = "https://raw.githubusercontent.com/fivethirtyeight/data/master/nba-elo/nbaallelo.csv"
+filename = pd.read_csv(url)
+
+print(filename.head())
+
+
+avg_pts = filename.pts.mean()
+
+median_pts = filename.pts.median()
+
+max_pts = filename.pts.max()
+
+min_pts = filename.pts.min()
+
+quantiles = filename.quantile(q=0.05, axis=1, numeric_only=True, interpolation='linear')
+
+
+print("the average is",avg_pts)
+print("the median is",median_pts)
+print("the max is",max_pts)
+print("the min is", min_pts)
+print("the quantiles are",quantiles)
+
+five_best_teams_asc = filename.groupby("fran_id").pts.mean().sort_values(ascending=True).head(10)
+
+five_best_teams_desc = filename.groupby("fran_id").pts.mean().sort_values(ascending=False).head(10)
+
+five_best_teams_all = filename.groupby("fran_id").pts.sum()
+
+
+trial = filename.groupby("year_id").pts.sum().loc[filename['fran_id'] =="Lakers"]
+
+print(trial)
+
+print(five_best_teams_asc)
+
+print(five_best_teams_desc)
+
+#print(five_best_teams_all)
+
+
+
+five_best_teams_asc.plot.bar()
+five_best_teams_desc.plot.bar()
+five_best_teams_all.plot.bar()
+five_best_teams_all.plot.hist()
+plt.show()
+
